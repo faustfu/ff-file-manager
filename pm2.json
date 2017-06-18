@@ -4,7 +4,7 @@
       "name": "ff-file-manager-" + process.env.NODE_ENV || "dev",
       "script": "app.js",
       "node_args": "--harmony",
-      "watch": ["src", "config"],
+      "watch": ["app.js", "src", "config"],
       "ignore_watch": ["public/uploads"],
       "watch_options": {
         "ignored": ".*"

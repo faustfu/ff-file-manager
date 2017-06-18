@@ -7,6 +7,19 @@
     <link href="/css/msc.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>Login</h1>
+    <form action="/login" method="POST">
+      <div class="row">
+        <label for="username">帳號</label>
+        <input type="text" name="username" id="username" value="" placeholder="請輸入帳號" required>
+      </div>
+      <div class="row">
+        <label for="password">密碼</label>
+        <input type="password" name="password" id="password" value="" placeholder="請輸入密碼" required>
+      </div>
+      <div class="row">
+        <input type="submit" value="登入">
+        <input type="reset"><br>
+      </div>
+    </form>
   </body>
 </html>

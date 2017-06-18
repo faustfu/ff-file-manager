@@ -3,7 +3,7 @@
 module.exports = function(app, env){
   console.log('Config routes ...');
 
-  require(__base + '/config/middlewares/preValidate')(app);
+  //require(__base + '/config/middlewares/preValidate')(app);
 
   require(__base + '/config/pages')(app, env);
 

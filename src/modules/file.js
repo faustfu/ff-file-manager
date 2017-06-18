@@ -31,15 +31,19 @@ function buildModule(app, db, env) {
   };
 
   function getList(access_token) {
-    return db.query(`
-    SELECT *
-    FROM dbo.Files
-    WHERE
-      ProjectId = ${fn.escape(projectIdMapper[env.PROJECT_NAME])} AND
-      UserId = ${fn.escape(access_token)}
-    ORDER BY
-      UpdateTime DESC
-    `);
+    const queryString = `
+      SELECT *
+      FROM dbo.Files
+      WHERE
+        ProjectId = ${fn.escape(projectIdMapper[env.PROJECT_NAME])} AND
+        UserId = ${fn.escape(access_token)}
+      ORDER BY
+        UpdateTime DESC
+    `;
+
+    fn.debug(queryString, 'debug getList)queryString');
+
+    return db.query(queryString);
   }
 
   function getOne(access_token, fileType, filename) {
