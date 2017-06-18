@@ -1,0 +1,15 @@
+npm-debug.log
+
+.git
+
+.sass-cache
+
+node_modules
+
+public/uploads
+public/css
+
+*.log
+*.lock
+
+pm2

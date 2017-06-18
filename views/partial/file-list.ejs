@@ -1,0 +1,33 @@
+<ul>
+<% for(var i=0; i<files.length; i++) {%>
+  <li>
+    <div class="image_info">
+      <div class="image_info__meta">
+        <div class="image_info__meta__title">
+          <div class="image_info__meta__title__prompt">标题</div>
+          <div class="image_info__meta__title__content"><%= files[i].fileTitle %></div>
+        </div>
+        <div class="image_info__meta__filename">
+          <div class="image_info__meta__filename__prompt">档案名称</div>
+          <div class="image_info__meta__filename__content"><%= files[i].filename %></div>
+        </div>
+        <div class="image_info__meta__file_size">
+          <div class="image_info__meta__file_size__prompt">档案大小</div>
+          <div class="image_info__meta__file_size__content"><%= files[i].fileSize %> Bytes</div>
+        </div>
+        <div class="image_info__meta__create_time">
+          <div class="image_info__meta__create_time__prompt">建立时间</div>
+          <div class="image_info__meta__create_time__content"><%= files[i].createTime && files[i].createTime.toISOString() %></div>
+        </div>
+        <div class="image_info__meta__update_time">
+          <div class="image_info__meta__update_time__prompt">修改时间</div>
+          <div class="image_info__meta__update_time__content"><%= files[i].updateTime && files[i].updateTime.toISOString() %></div>
+        </div>
+      </div>
+      <div class="image_info__preview">
+        <img class="preview" src="<%= files[i].url %>" />
+      </div>
+    </div>
+  </li>
+<% } %>
+</ul>
