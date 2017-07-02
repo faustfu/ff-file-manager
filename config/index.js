@@ -31,8 +31,7 @@ const setting = {
 
 var ret = {};
 
-ret.hostUrl = 'http://' + setting.host + ':' + setting.port;
-ret.apiUrl = setting.hostUrl + setting.apiPath;
+ret.publicHostUrl = setting.publicHostUrl;
 ret.uploadUrl = setting.publicHostUrl + setting.uploadPath;
 ret.publicApiUrl = setting.publicHostUrl + setting.apiPath;
 ret.setting = setting;

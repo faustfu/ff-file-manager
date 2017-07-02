@@ -1,4 +1,7 @@
 .git/
+.gitignore
 .sass-cache/
 node_modules/
 public/uploads/
+config/env
+*.db

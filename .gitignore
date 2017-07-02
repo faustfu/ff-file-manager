@@ -11,5 +11,7 @@ public/css
 
 *.log
 *.lock
+*.db
+.DS_Store
 
 pm2

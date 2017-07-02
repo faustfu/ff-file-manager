@@ -3,18 +3,15 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
+const dev = require('../env/dev');
+const test = require('../env/test');
+const prod = require('../env/prod');
+
 const users = {
-  zack: {
-    username: 'zack',
-    password: '1234',
-    id: 1,
-  },
-  node: {
-    username: 'node',
-    password: '5678',
-    id: 2,
-  },
-}
+    dev: dev.users,
+    test: test.users,
+    prod: prod.users,
+}[process.env.NODE_ENV || 'dev'];
 
 const localStrategy = new LocalStrategy({
     usernameField: 'username',
@@ -49,12 +46,12 @@ passport.needAuthentication = authenticationMiddleware;
 
 module.exports = passport;
 
-function authenticationMiddleware() {  
+function authenticationMiddleware(app, env) {  
   return function (req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
 
-    res.redirect('/');
+    res.redirect(env.publicHostUrl + '/');
   }
 }

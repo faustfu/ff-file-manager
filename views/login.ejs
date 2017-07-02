@@ -4,10 +4,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>File Manager</title>
-    <link href="/css/msc.css" rel="stylesheet" />
+    <link href="<%= publicHostUrl %>/css/msc.css" rel="stylesheet" />
   </head>
   <body>
-    <form action="/login" method="POST">
+    <form action="<%= publicHostUrl %>/login" method="POST">
       <div class="row">
         <label for="username">帳號</label>
         <input type="text" name="username" id="username" value="" placeholder="請輸入帳號" required>

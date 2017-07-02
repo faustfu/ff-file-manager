@@ -1,13 +1,15 @@
 'use strict';
 
 module.exports = {
-  publicHostUrl: 'http://localhost:17000',
+  publicHostUrl: 'https://www.faust.tw/fm',
   host: 'localhost',
   port: 17000,
-  dbServer: 'localhost',
-  dbPort: '1433',
-  dbName: 'MSC_UploadFiles',
-  dbUser: 'sa',
-  dbPassword: 'faust@11111111',
+  users: {
+    uu: {
+      username: 'uu',
+      password: '1234',
+      id: 1,
+    },
+  },
 };
 
