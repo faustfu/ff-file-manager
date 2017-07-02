@@ -2,26 +2,36 @@
   <div class="row">
     <label for="title">标题</label>
     <input type="text" name="title" id="title" value="" placeholder="请输入档案标题">
-    <input type="file" name="file" id="files" accept="image/*" required>
+    <input type="file" name="file" id="files" accept="image/*" multiple required>
   </div>
   <div class="row">
     <input type="submit" value="上传">
     <input type="reset"><br>
   </div>
-  <div class="row">
-    <img class="preview" id="image" />
-  </div>
+  <div class="row" id="images"></div>
 </form>
 <script>
   document.getElementById("files").onchange = function () {
-    var reader = new FileReader();
+    var len = this.files && this.files.length || 0, imgs = '';
 
-    reader.onload = function (e) {
-        // get loaded data and render thumbnail.
-        document.getElementById("image").src = e.target.result;
-    };
+    for(var i = 0; i < len; i++)
+    {
+      imgs += '<img class="preview" id="image' + i + '" />';
+    }
+    document.getElementById('images').innerHTML = imgs;
 
-    // read the image file as a data URL.
-    reader.readAsDataURL(this.files[0]);
+    len > 0 && Array.prototype.forEach.call(this.files, preview);
+
+    function preview(file, index) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+          // get loaded data and render thumbnail.
+          document.getElementById("image" + index).src = e.target.result;
+      };
+
+      // read the image file as a data URL.
+      reader.readAsDataURL(file);
+    }
   };
 </script>

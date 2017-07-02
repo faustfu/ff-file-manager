@@ -143,88 +143,94 @@ function buildModule(app, db, env) {
   }
 
   function create(username, files, title) {
-    return validate(files).then(function(file) {
-      let f = fn.clone(file), conditions = {};
+    return validate(files).then(function(files) {
+      return fn.all(_.map(files, function(file) {
+        return createFile(username, file, title);
+      }));
+    });
+  }
 
-      f.type = f.mimetype.split('/')[0];
+  function createFile(username, file, title) {
+    let f = fn.clone(file), conditions = {};
 
-      if (f.type !== 'image') {
-        return fn.reject('unsupported format=' + f.type);
-      }
+    f.type = f.mimetype.split('/')[0];
 
-      conditions = {
-        projectId: projectIdMapper[env.PROJECT_NAME],
-        userId: username,
-        fileType: fileTypeMapper[f.type],
-        filename: f.originalname
-      };
+    if (f.type !== 'image') {
+      return fn.reject('unsupported format=' + f.type);
+    }
 
-      fn.debug(conditions, 'debug create)before check if existed, conditions');
+    conditions = {
+      projectId: projectIdMapper[env.PROJECT_NAME],
+      userId: username,
+      fileType: fileTypeMapper[f.type],
+      filename: f.originalname
+    };
 
-      return getOne(username, f.type, f.originalname).then(function(result) {
-        fn.debug(result, 'debug create)after check if existed, result');
-        let conn = null;
+    fn.debug(conditions, 'debug create)before check if existed, conditions');
 
-        if (result) {
-          fs.access(env.setting.uploadDir + result.URL, (err) => {
-            if (!err) {
-              fs.unlink(env.setting.uploadDir + result.URL, (err) => {
-                if (err) {
-                  fn.log(err, 'error after unlink file');
-                }
-              });
-            }
+    return getOne(username, f.type, f.originalname).then(function(result) {
+      fn.debug(result, 'debug create)after check if existed, result');
+      let conn = null;
+
+      if (result) {
+        fs.access(env.setting.uploadDir + result.URL, (err) => {
+          if (!err) {
+            fs.unlink(env.setting.uploadDir + result.URL, (err) => {
+              if (err) {
+                fn.log(err, 'error after unlink file');
+              }
+            });
+          }
+        });
+
+        try {
+          conn = db.getConnection();
+
+          const stmt = conn.prepare(updateString);
+
+          const result = stmt.run({
+            ProjectId: conditions.projectId,
+            UserId: conditions.userId,
+            FileType: conditions.fileType,
+            FileName: conditions.filename,
+            URL: f.filename,
+            FileTitle: title,
+            FileSize: f.size
           });
 
-          try {
-            conn = db.getConnection();
+          fn.debug(result, 'debug update)update result');
 
-            const stmt = conn.prepare(updateString);
-
-            const result = stmt.run({
-              ProjectId: conditions.projectId,
-              UserId: conditions.userId,
-              FileType: conditions.fileType,
-              FileName: conditions.filename,
-              URL: f.filename,
-              FileTitle: title,
-              FileSize: f.size
-            });
-
-            fn.debug(result, 'debug update)update result');
-
-            return getOne(username, f.type, f.originalname);;
-          } catch(err) {
-            fn.log(err, 'error after update');
-          } finally {
-            conn.close();
-          }
-        } else {
-          try {
-            conn = db.getConnection();
-
-            const stmt = conn.prepare(insertString);
-
-            const result = stmt.run({
-              ProjectId: conditions.projectId,
-              UserId: conditions.userId,
-              FileType: conditions.fileType,
-              FileName: conditions.filename,
-              URL: f.filename,
-              FileTitle: title,
-              FileSize: f.size
-            });
-
-            fn.debug(result, 'debug insert)insert result');
-
-            return getOne(username, f.type, f.originalname);;
-          } catch(err) {
-            fn.log(err, 'error after insert');
-          } finally {
-            conn.close();
-          }
+          return getOne(username, f.type, f.originalname);;
+        } catch(err) {
+          fn.log(err, 'error after update');
+        } finally {
+          conn.close();
         }
-      });
+      } else {
+        try {
+          conn = db.getConnection();
+
+          const stmt = conn.prepare(insertString);
+
+          const result = stmt.run({
+            ProjectId: conditions.projectId,
+            UserId: conditions.userId,
+            FileType: conditions.fileType,
+            FileName: conditions.filename,
+            URL: f.filename,
+            FileTitle: title,
+            FileSize: f.size
+          });
+
+          fn.debug(result, 'debug insert)insert result');
+
+          return getOne(username, f.type, f.originalname);;
+        } catch(err) {
+          fn.log(err, 'error after insert');
+        } finally {
+          conn.close();
+        }
+      }
     });
   }
 
@@ -272,6 +278,6 @@ function buildModule(app, db, env) {
   function validate(files) {
     if (!fn.existy(files) || _.size(files) <= 0) return fn.reject('empty or unknown file');
 
-    return fn.promise(files[0]);
+    return fn.promise(files);
   }
 }

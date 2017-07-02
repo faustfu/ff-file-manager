@@ -19,9 +19,9 @@ module.exports = function(app, env){
   }
 
   function create(req, res){
-    modules.file.create(req.user.username, req.files, req.body.title).then(function(row) {
+    modules.file.create(req.user.username, req.files, req.body.title).then(function(rows) {
       if (_.toLower(_.get(req, 'headers.Accept', '')) === 'application/json') {
-        fn.resHelper(req, res).send(modules.file.toJSON(row));
+        fn.resHelper(req, res).send(_.map(rows, modules.file.toJSON));
       } else {
         res.redirect(303, env.publicHostUrl + '/uploadFile');
       }
